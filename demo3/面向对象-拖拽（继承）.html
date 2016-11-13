@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		body {
+			margin: 0;
+		}
+		div {
+			float: left;
+			width: 100px;
+			height:100px;
+			font-size: 20px;
+			line-height: 100px;
+			text-align: center;
+			color: #000;
+		}
+		#div1 {
+			background: red;
+			position: absolute;
+			left:0;
+			top:0;
+		}
+		#div2 {
+			background: yellow;
+			position: absolute;
+			left:100px;
+			top:0;
+		}
+	</style>
+</head>
+<body>
+	<div id="div1">父类</div>
+	<div id="div2">子类</div>
+	<script type="text/javascript">
+		function Drag(id){
+			this.element = document.getElementById(id);
+			this.disX = 0;
+			this.disY = 0;
+		}
+		Drag.prototype.init = function(){
+			var This = this;
+			this.element.onmousedown = function(ev){
+				var ev = ev || window.event;
+				This.fnDown(ev);
+				return false;
+			}
+		}
+		Drag.prototype.fnDown = function(ev){
+			var This = this;
+			this.disX = ev.clientX - this.element.offsetLeft;
+			this.disY = ev.clientY - this.element.offsetTop;
+			document.onmousemove = function(ev){
+				var ev = ev || window.event;
+				This.fnMove(ev);
+			};
+			document.onmouseup = function(){
+				This.fnUp();
+			};
+		}
+		Drag.prototype.fnMove = function(ev){
+			this.element.style.left = ev.clientX - this.disX + "px";
+			this.element.style.top = ev.clientY - this.disY + "px";
+			this.element.style.zIndex = 9999;
+		}
+		Drag.prototype.fnUp = function(ev){
+			document.onmousemove = null;
+			document.onmouseup = null;
+			this.element.style.zIndex = 0;
+		}
+
+		//子类继承父类的属性
+		function ChildrenDrag(id){
+			Drag.call(this,id);
+		}
+		//子类继承父类的方法
+		extend(ChildrenDrag.prototype,Drag.prototype)
+		//子类自己的方法
+		ChildrenDrag.prototype.fnMove = function(ev){
+			var maxL = document.documentElement.clientWidth - this.element.offsetWidth;
+			var maxT = document.documentElement.clientHeight - this.element.offsetHeight;
+			var eleL = ev.clientX - this.disX;
+			var eleT = ev.clientY - this.disY;
+			if(eleL < 3)eleL = 0;
+			if(eleT < 3)eleT = 0;
+			if(eleL > maxL - 3)eleL = maxL;
+			if(eleT > maxT - 3)eleT = maxT;
+
+			this.element.style.left = eleL + "px";
+			this.element.style.top = eleT + "px";
+			this.element.style.zIndex = 9999;
+		}
+
+
+		//封装继承方法
+		function extend(obj1,obj2){
+			for(var attr in obj2){
+				obj1[attr] = obj2[attr];
+			}
+		}
+		window.onload = function(){
+			var f1 = new Drag("div1");
+			f1.init();
+			var f2 = new ChildrenDrag("div2");
+			f2.init();
+
+
+
+
+		}
+	</script>
+</body>
+</html>
