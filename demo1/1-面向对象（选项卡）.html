@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		#div1 div{
+			width: 100px;
+			height: 100px;
+			border: 1px solid #000;
+		}
+		.active{
+			background:red;
+		}
+	</style>
+</head>
+<body>
+
+	<div id="div1">
+		<input type="button" value="按钮1" class = "active">
+		<input type="button" value="按钮2">
+		<input type="button" value="按钮3">
+		<div>1111</div>
+		<div style = "display: none;">222</div>
+		<div style = "display: none;">333</div>
+	</div>
+	<script type="text/javascript">
+		// var oInputs = document.getElementsByTagName("input");
+		// var oDiv = document.getElementById("div1");
+		// var oDivs = oDiv.getElementsByTagName("div");
+
+		// for( var i = 0; i < oInputs.length; i++ ){
+		// 	oInputs[i].index = i;
+		// 	oInputs[i].onclick = function(){
+		// 		for( var i = 0; i < oDivs.length; i++ ){
+		// 			oInputs[i].className = "";
+		// 			oDivs[i].style.display = "none";
+		// 		}
+		// 		oInputs[this.index].className = "active";
+		// 		oDivs[this.index].style.display = "block";
+		// 	}
+		// }
+		window.onload = function(){
+			var t1 = new Tab();
+			t1.init();
+		}
+		var oInputs = null;
+		var oDiv = null;
+		var oDivs = null;
+		function Tab(){
+			this.oInputs = document.getElementsByTagName("input");
+			this.oDiv = document.getElementById("div1");
+			this.oDivs = this.oDiv.getElementsByTagName("div");
+		}
+		Tab.prototype.init = function(){
+			This = this;
+			for( var i = 0; i < this.oInputs.length; i++ ){
+				this.oInputs[i].index = i;
+				this.oInputs[i].onclick = function(){
+					This.change(this);
+				}
+					
+			}
+		}
+		Tab.prototype.change = function(obj){
+			for( var i = 0; i < this.oDivs.length; i++ ){
+				this.oInputs[i].className = "";
+				this.oDivs[i].style.display = "none";
+			}
+			obj.className = "active";
+			this.oDivs[obj.index].style.display = "block";
+		}
+	</script>
+</body>
+</html>
